@@ -34,10 +34,6 @@ export class AppComponent {
 
 
   constructor(private svc: AnnotationService) {
-    effect(() => {
-      // Hide tooltip if nothing hovered
-      if (!this.hoverId()) this.tooltip.set(null);
-    });
   }
 
 
@@ -80,23 +76,19 @@ export class AppComponent {
     this.drawingPolygon = [];
   }
 
-
-  // Hover detection: simple hit test for points and polygons
   onMouseMove(ev: MouseEvent) {
     if (!this.imageLoaded()) return;
     const p = this.toPct(ev.clientX, ev.clientY);
-    if (!p) { this.hoverId.set(null); return; }
+    const hit = p ? this.hitTest(p) : null;
 
-
-    const hit = this.hitTest(p);
     if (hit) {
       this.hoverId.set(hit.id);
       this.tooltip.set({ x: ev.clientX + 12, y: ev.clientY + 12, text: hit.name });
     } else {
       this.hoverId.set(null);
+      this.tooltip.set(null); // <— do it here directly
     }
   }
-
   private hitTest(p: Point): Annotation | null {
     const ptRadius = 0.018; // ~1.8% of image width/height
 
@@ -193,5 +185,13 @@ export class AppComponent {
 
   getDrawingPolygonPoints(points: Point[]): string {
     return points.map(p => (p.xPct * 100) + ',' + (p.yPct * 100)).join(' ');
+  }
+
+  get stageStyle() {
+    return {
+      '--z': this.zoom().toString(),
+      '--px': this.pan().x + 'px',
+      '--py': this.pan().y + 'px'
+    } as any;
   }
 }

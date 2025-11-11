@@ -1,64 +1,106 @@
-.container {
-    max-width: 1100px;
+.app-layout {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #111;
+  color: #eee;
+  font-family: 'Inter', sans-serif;
 }
 
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 20px;
+  background: #1a1a1a;
+  border-bottom: 1px solid #333;
 
-.stage {
-    position: relative;
-    overflow: hidden;
-    background: #fafafa;
-    user-select: none;
-    cursor: crosshair;
-    height: auto;
-    aspect-ratio: 16/9; // keeps a stable box during load
-}
-
-
-.stage img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transform-origin: 0 0;
-}
-
-
-.stage .overlay {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none; // we handle events on the wrapper for simplicity
-}
-
-
-// Apply zoom & pan by transforming the container's children
-.stage {
-    --z: 1;
-    --px: 0px;
-    --py: 0px;
-}
-
-:host ::ng-deep .stage {
-    --z: 1;
-}
-
-
-// Bind zoom/pan via inline style (set in template with [style])? We instead do it via a global rule using attributes
-.stage {
-    transform: translate(var(--px), var(--py)) scale(var(--z));
-}
-
-
-// Tooltip
-.tt {
-    position: fixed;
-    background: rgba(0, 0, 0, 0.85);
-    color: #fff;
-    padding: 4px 8px;
+  .actions button,
+  .actions .import-btn {
+    background: #2a2a2a;
     border-radius: 6px;
-    font-size: 12px;
-    pointer-events: none;
-    z-index: 1000;
+    margin-left: 8px;
+    padding: 6px 12px;
+    cursor: pointer;
+    border: none;
+    color: #eee;
+    transition: 0.2s;
+  }
+  .actions button:hover { background: #444; }
+}
+
+.content {
+  flex: 1;
+  display: flex;
+}
+
+.sidebar {
+  width: 260px;
+  border-right: 1px solid #333;
+  padding: 16px;
+  overflow-y: auto;
+  background: #1a1a1a;
+
+  .people-list {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .person {
+    padding: 10px;
+    border-radius: 8px;
+    background: #222;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .person .actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #aaa;
+  }
+}
+
+.canvas-area {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 0; 
+  background: #151515;
+}
+
+/* Fixed image/canvas size */
+.stage {
+  position: relative;
+  width: 1200px;      /* <— YOU CAN ADJUST THIS */
+  height: 800px;     /* <— YOU CAN ADJUST THIS */
+  border-radius: 12px;
+  overflow: hidden;
+  background: #111;
+  transform: translate(var(--px), var(--py)) scale(var(--z));
+  transform-origin: center center; /* <— center zooming */
+}
+
+/* Image & SVG overlay centered and sized properly */
+.stage img,
+.stage .overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* crop if ratios differ */
+  pointer-events: none;
+}
+
+.tooltip {
+  position: fixed;
+  padding: 5px 10px;
+  background: #000;
+  color: #fff;
+  border-radius: 6px;
+  font-size: 13px;
+  pointer-events: none;
 }
