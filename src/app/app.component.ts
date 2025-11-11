@@ -150,18 +150,6 @@ export class AppComponent {
     if (ev.deltaY > 0) this.zoomOut(); else this.zoomIn();
   }
 
-
-  onDragStart(ev: MouseEvent) {
-    const start = { x: ev.clientX, y: ev.clientY };
-    const pan0 = { ...this.pan() };
-    const move = (e: MouseEvent) => {
-      this.pan.set({ x: pan0.x + (e.clientX - start.x), y: pan0.y + (e.clientY - start.y) });
-    };
-    const up = () => { window.removeEventListener('mousemove', move); window.removeEventListener('mouseup', up); };
-    window.addEventListener('mousemove', move);
-    window.addEventListener('mouseup', up);
-  }
-
   exportJSON() {
     const data = this.svc.export();
     const blob = new Blob([data], { type: 'application/json' });

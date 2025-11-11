@@ -36,8 +36,8 @@
 
     <!-- IMAGE AREA -->
     <section class="canvas-area">
-      <div class="stage" #wrap (mousemove)="onMouseMove($event)" (click)="onCanvasClick($event)"
-           (wheel)="onWheel($event)" (mousedown)="onDragStart($event)" [ngStyle]="stageStyle">
+      <div class="stage" #wrap (click)="onCanvasClick($event)"
+           (wheel)="onWheel($event)" [ngStyle]="stageStyle">
 
         <img #imgEl src="images/family.jpeg" alt="Family" (load)="onImageLoad()" draggable="false"/>
 
