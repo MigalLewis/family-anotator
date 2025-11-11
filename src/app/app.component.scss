@@ -1,0 +1,64 @@
+.container {
+    max-width: 1100px;
+}
+
+
+.stage {
+    position: relative;
+    overflow: hidden;
+    background: #fafafa;
+    user-select: none;
+    cursor: crosshair;
+    height: auto;
+    aspect-ratio: 16/9; // keeps a stable box during load
+}
+
+
+.stage img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform-origin: 0 0;
+}
+
+
+.stage .overlay {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; // we handle events on the wrapper for simplicity
+}
+
+
+// Apply zoom & pan by transforming the container's children
+.stage {
+    --z: 1;
+    --px: 0px;
+    --py: 0px;
+}
+
+:host ::ng-deep .stage {
+    --z: 1;
+}
+
+
+// Bind zoom/pan via inline style (set in template with [style])? We instead do it via a global rule using attributes
+.stage {
+    transform: translate(var(--px), var(--py)) scale(var(--z));
+}
+
+
+// Tooltip
+.tt {
+    position: fixed;
+    background: rgba(0, 0, 0, 0.85);
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    pointer-events: none;
+    z-index: 1000;
+}
