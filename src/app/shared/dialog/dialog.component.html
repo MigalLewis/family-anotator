@@ -1,0 +1,10 @@
+<div class="dialog-box">
+  <h2>{{ data.title }}</h2>
+
+  <input [(ngModel)]="name" type="text" placeholder="Enter name" autofocus />
+
+  <div class="buttons">
+    <button (click)="close()">Cancel</button>
+    <button class="primary" (click)="save()">Save</button>
+  </div>
+</div>

@@ -2,19 +2,13 @@
 
   <!-- Top Bar -->
   <header class="topbar">
-    <div class="logo">👵 Family Tags</div>
-
+    <div class="title">👵 Family Tags</div>
     <div class="actions">
-      <button (click)="startPointMode()">Add Pin</button>
-      <button (click)="startPolyMode()">Draw Area</button>
-      <button (click)="cancelDraw()">Stop</button>
-      <button (click)="zoomOut()">-</button>
-      <button (click)="zoomIn()">+</button>
-      <button (click)="resetView()">Reset</button>
-      <button (click)="exportJSON()">Export</button>
+      <!-- <button (click)="startAnnotation()">Add Annotation</button> -->
+      <!-- <button (click)="exportJSON()">Export</button>
       <label class="import-btn">
-        Import<input type="file" accept="application/json" (change)="importJSON($event)" hidden>
-      </label>
+        Import <input type="file" accept="application/json" (change)="importJSON($event)" hidden>
+      </label> -->
     </div>
   </header>
 
@@ -24,11 +18,11 @@
       <h3>People ({{ annotations.length }})</h3>
       <div class="people-list">
         <div class="person" *ngFor="let a of annotations">
+          <div class="num">{{ a.label }}</div>
           <div class="name">{{ a.name }}</div>
-          <div class="sub">{{ a.type }} · {{ a.createdAt | date:'short' }}</div>
           <div class="actions">
             <button (click)="renameAnn(a)">✏️</button>
-            <button (click)="deleteAnn(a)">🗑️</button>
+            <button class="danger" (click)="deleteAnn(a)">🗑️</button>
           </div>
         </div>
       </div>
@@ -36,33 +30,36 @@
 
     <!-- IMAGE AREA -->
     <section class="canvas-area">
-      <div class="stage" #wrap (click)="onCanvasClick($event)"
-           (wheel)="onWheel($event)" [ngStyle]="stageStyle">
+      <div class="stage" #wrap (mousedown)="startDrag($event)" (mousemove)="dragMove($event)"
+        (mouseup)="endDrag($event)">
 
-        <img #imgEl src="images/family.jpeg" alt="Family" (load)="onImageLoad()" draggable="false"/>
+        <img #imgEl src="images/family.jpeg" alt="Family" draggable="false" />
 
-        <svg #svg class="overlay">
+        <svg class="overlay">
+          <!-- existing annotations -->
           <ng-container *ngFor="let a of annotations">
-            <circle *ngIf="a.type==='point'"
-                    [attr.cx]="a.points[0].xPct * 100 + '%'"
-                    [attr.cy]="a.points[0].yPct * 100 + '%'"
-                    r="0.9%" fill="#14b8a6" opacity="0.9"></circle>
 
-            <polygon *ngIf="a.type==='polygon'"
-                     [attr.points]="getDrawingPolygonPoints(a.points)"
-                     fill="#facc15" fill-opacity="0.22" stroke="#facc15" stroke-width="1.5"></polygon>
+            <!-- vertical line -->
+            <line [attr.x1]="a.start.xPct * 100 + '%'" [attr.y1]="a.start.yPct * 100 + '%'"
+              [attr.x2]="a.end.xPct * 100 + '%'" [attr.y2]="a.end.yPct * 100 + '%'" stroke="white" stroke-width="2">
+            </line>
+
+            <!-- number bubble -->
+            <circle [attr.cx]="a.end.xPct * 100 + '%'" [attr.cy]="a.end.yPct * 100 + '%'" r="1.2%" fill="white">
+            </circle>
+
+            <text [attr.x]="a.end.xPct * 100 + '%'" [attr.y]="a.end.yPct * 100 + '%'" text-anchor="middle"
+              alignment-baseline="middle" font-size="0.9rem" fill="black" font-weight="600">
+              {{ a.label }}
+            </text>
           </ng-container>
 
-          <polyline *ngIf="drawingPolygon.length"
-                    [attr.points]="getDrawingPolygonPoints(drawingPolygon)"
-                    stroke="#facc15" stroke-width="1.5" fill="none" stroke-dasharray="4 4"/>
+          <!-- LIVE DRAW WHILE DRAGGING -->
+          <line *ngIf="isDragging" [attr.x1]="dragStart.xPct * 100 + '%'" [attr.y1]="dragStart.yPct * 100 + '%'"
+            [attr.x2]="dragCurrent.xPct * 100 + '%'" [attr.y2]="dragCurrent.yPct * 100 + '%'" stroke="white"
+            stroke-width="2" stroke-dasharray="4 2"></line>
         </svg>
       </div>
     </section>
   </main>
-
-  <!-- Tooltip -->
-  <div class="tooltip" *ngIf="tooltip()" [style.left.px]="tooltip()!.x" [style.top.px]="tooltip()!.y">
-    {{ tooltip()!.text }}
-  </div>
 </div>
