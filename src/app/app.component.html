@@ -4,11 +4,11 @@
   <header class="topbar">
     <div class="title">👵 Family Tags</div>
     <div class="actions">
-      <!-- <button (click)="startAnnotation()">Add Annotation</button> -->
-      <!-- <button (click)="exportJSON()">Export</button>
-      <label class="import-btn">
-        Import <input type="file" accept="application/json" (change)="importJSON($event)" hidden>
-      </label> -->
+      <button (click)="uploadImage()">Upload Image</button>
+      <button (click)="resetAnnotations()">Reset Annotations</button>
+      <button (click)="save()">Save</button>
+      <button (click)="exportAsImage()">Export Image</button>
+      <button (click)="exportAsPDF()">Export PDF</button>
     </div>
   </header>
 
@@ -33,7 +33,13 @@
       <div class="stage" #wrap (mousedown)="startDrag($event)" (mousemove)="dragMove($event)"
         (mouseup)="endDrag($event)">
 
-        <img #imgEl src="images/family.jpeg" alt="Family" draggable="false" />
+        <div class="no-image" *ngIf="!imageSrc">
+          <p>No image selected</p>
+          <button (click)="triggerImageSelect()">Upload Image</button>
+        </div>
+
+        <input #imageInput type="file" accept="image/*" style="display: none" (change)="onImageSelected($event)" />
+        <img *ngIf="imageSrc" [src]="imageSrc" alt="Loaded Family" draggable="false" />
 
         <svg class="overlay">
           <!-- existing annotations -->
@@ -63,3 +69,4 @@
     </section>
   </main>
 </div>
+
