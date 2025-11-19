@@ -1,0 +1,14 @@
+<div class="sidebar">
+  <h3>People ({{ annotations.length }})</h3>
+  <div class="people-list">
+    <div class="person" *ngFor="let a of annotations">
+      <div class="num">{{ a.label }}</div>
+      <div class="name">{{ a.name }}</div>
+      <div class="actions">
+        <button (click)="rename.emit(a)">✏️</button>
+        <button class="danger" (click)="remove.emit(a)">🗑️</button>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -1,32 +1,12 @@
 <div class="app-layout">
 
-  <!-- Top Bar -->
-  <header class="topbar">
-    <div class="title">👵 Family Tags</div>
-    <div class="actions">
-      <button (click)="uploadImage()">Upload Image</button>
-      <button (click)="resetAnnotations()">Reset Annotations</button>
-      <button (click)="save()">Save</button>
-      <button (click)="exportAsImage()">Export Image</button>
-      <button (click)="exportAsPDF()">Export PDF</button>
-    </div>
-  </header>
+  <app-topbar (upload)="uploadImage()" (reset)="resetAnnotations()" (save)="save()"
+    (exportImage)="exportAsImage()" (exportPdf)="exportAsPDF()"></app-topbar>
 
   <main class="content">
     <!-- LEFT PANEL -->
-    <aside class="sidebar">
-      <h3>People ({{ annotations.length }})</h3>
-      <div class="people-list">
-        <div class="person" *ngFor="let a of annotations">
-          <div class="num">{{ a.label }}</div>
-          <div class="name">{{ a.name }}</div>
-          <div class="actions">
-            <button (click)="renameAnn(a)">✏️</button>
-            <button class="danger" (click)="deleteAnn(a)">🗑️</button>
-          </div>
-        </div>
-      </div>
-    </aside>
+    <app-annotation-list [annotations]="annotations" (rename)="renameAnn($event)"
+      (remove)="deleteAnn($event)"></app-annotation-list>
 
     <!-- IMAGE AREA -->
     <section class="canvas-area">
